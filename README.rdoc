@@ -1,6 +1,6 @@
 = Xmpp2s - Xmpp Send Message
 
-{<img src="https://gemnasium.com/ChattyCrow/xmpp2s.svg" alt="Dependency Status" />}[https://gemnasium.com/ChattyCrow/xmpp2s] {<img src="http://inch-ci.org/github/chattycrow/xmpp2s.svg?branch=master" alt="Inline docs" />}[http://inch-ci.org/github/chattycrow/xmpp2s] {https://hakiri.io/github/ChattyCrow/xmpp2s/master.svg}[https://hakiri.io/github/ChattyCrow/xmpp2s/master]
+{<img src="https://gemnasium.com/ChattyCrow/xmpp2s.svg" alt="Dependency Status" />}[https://gemnasium.com/ChattyCrow/xmpp2s] {<img src="http://inch-ci.org/github/chattycrow/xmpp2s.svg?branch=master" alt="Inline docs" />}[http://inch-ci.org/github/chattycrow/xmpp2s] {<img src="https://hakiri.io/github/ChattyCrow/xmpp2s/master.svg" alt="Status" />}[https://hakiri.io/github/ChattyCrow/xmpp2s/master] {<img src="https://codeclimate.com/github/ChattyCrow/xmpp2s/badges/gpa.svg" />}[https://codeclimate.com/github/ChattyCrow/xmpp2s]
 
 This gem is not a fully replacement for xmpp4r gem! You can use this gem
 just only to simple send a jabber message. This gem is based on xmpp4r
@@ -10,29 +10,21 @@ and jabber4r versions.
 
 Add this line to your application's Gemfile:
 
-=begin ruby
-gem 'xmpp2s'
-= end
+  gem 'xmpp2s'
 
 And then execute:
 
-=begin bash
-    $ bundle
-= end
+  $ bundle
 
 Or install it yourself as:
 
-=begin bash
-    $ gem install xmpp2s
-=end
+  $ gem install xmpp2s
 
 == Usage
 
-=begin ruby
   session = Xmpp2s::Session.open('account@host/resource', 'password')
   session.send_message('jack@jabber.org', 'Test message')
   session.close
-=end
 
 == Contributing
 
