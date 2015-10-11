@@ -23,7 +23,7 @@ Or install it yourself as:
 == Usage
 
   session = Xmpp2s::Session.open('account@host/resource', 'password')
-  session.send_message('jack@jabber.org', 'Test message')
+  status, error = session.send_message('jack@jabber.org', 'Test message')
   session.close
 
 == Contributing

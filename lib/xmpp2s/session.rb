@@ -94,12 +94,39 @@ module Xmpp2s
     # * +jid+ - Target user JID
     # * +message+ - Message for target user
     #
+    # ==== Return
+    #
+    # * +status+ - Message sent
+    # * +msg+ - Error message
+    #
     # ==== Example
     #
-    #   send_message 'test2@jabber.org', 'Hello test2'
+    #   status, msg = send_message! 'test2@jabber.org', 'Hello test2'
     #
-    def send_message(jid, message)
-      @connection.send_message(jid, message)
+    def send_message(jid, message, options = {})
+      @connection.send_message(jid, message, options)
+    end
+
+    # Send simple message to XMPP, raise exception if message
+    # can not be delivered!
+    #
+    # ==== Attributes
+    #
+    # * +jid+ - Target user JID
+    # * +message+ - Message for target user
+    #
+    # ==== Return
+    #
+    # * +status+ - Message sent
+    # * +_msg+ - Error message (not required, exception will be raised)
+    #
+    # ==== Example
+    #
+    #   status, _msg = send_message! 'test2@jabber.org', 'Hello test2'
+    #
+    def send_message!(jid, message, options = {})
+      options[:raise_on_error] = true
+      send_message(jid, message, options)
     end
 
     # Close connection if it is possible

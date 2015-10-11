@@ -26,7 +26,7 @@ module Xmpp2s
 
         # Add resource node
         resource_node = XML::Node.new('resource')
-        resource_node.content = @resource
+        resource_node.content = @resource || ''
 
         # Add child
         bind_node << resource_node

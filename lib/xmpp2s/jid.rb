@@ -40,11 +40,15 @@ module Xmpp2s
     end
 
     def full_jid
-      if @domain
+      if @resource
         "#{jid}/#{@resource}"
       else
         jid
       end
+    end
+
+    def resource
+      @resource || ''
     end
 
     # Parse node, domain and resource match PATTERN

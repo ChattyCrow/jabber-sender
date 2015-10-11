@@ -1,5 +1,4 @@
 require 'socket'
-require 'byebug'
 
 module Xmpp2s
   # Class wraps TCP connection to jabber server
@@ -114,15 +113,12 @@ module Xmpp2s
       response = read_data(skip_empty_response: true)
 
       # Error response
-      error = false
+      err_message = nil
 
       # Check if response is LibXML document (indicates problem!)
       if response.is_a?(LibXML::XML::Document)
         # Find an error?
         if error_xml = response.find_first('error')
-          # Error is true
-          error = true
-
           # Error message
           err_message = error_xml.child.name
 
@@ -135,18 +131,7 @@ module Xmpp2s
       end
 
       # Return true | false
-      !error
-    end
-
-    # Send message and raise exception on error.
-    #
-    # === Attributes
-    #
-    # * +jid+ - Target user jid
-    # * +message+ - Message
-    def send_message!(jid, message, options = {})
-      options[:raise_on_error] = true
-      send_message(jid, message, options)
+      [ err_message.nil?, err_message ]
     end
 
     # Close connection
@@ -279,7 +264,7 @@ module Xmpp2s
       group_data = response.match %r{<jid>(?<jid>.*)<\/jid>}
 
       # Test group data
-      if !group_data || !(jid_data = group_data['jid']) || jid_data != @jid.full_jid
+      if !group_data || !(jid_data = group_data['jid']) || !jid_data.start_with?(@jid.full_jid)
         close
         fail ConnectionFailed, 'Bind was unsuccesfull'
       end
