@@ -1,5 +1,3 @@
-require 'xml'
-
 module Xmpp2s
   module Protocol
     # Class represents start stream XML
@@ -13,23 +11,15 @@ module Xmpp2s
 
       # Remove last /> we have to sent just opening tag!
       def to_xml
-        @xml ||= begin
-          str = xml_node.to_s
-          str[-2] = ''
-          str
-        end
+        @xml ||= xml_node
       end
 
       private
 
       def xml_node
-        node = XML::Node.new('stream:stream')
-        node.attributes['xmlns:stream'] = 'http://etherx.jabber.org/streams'
-        node.attributes['xmlns']        = 'jabber:client'
-        node.attributes['to']           = @domain
-        node.attributes['xml:lang']     = 'en'
-        node.attributes['version']      = '1.0'
-        node
+        <<-XML
+          <stream:stream xmlns:stream='http://etherx.jabber.org/streams' xmlns='jabber:client' to='#{@domain}' xml:lang='en' version='1.0'>
+        XML
       end
     end
   end

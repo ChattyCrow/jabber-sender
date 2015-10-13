@@ -115,10 +115,10 @@ module Xmpp2s
       # Error response
       err_message = nil
 
-      # Check if response is LibXML document (indicates problem!)
-      if response.is_a?(LibXML::XML::Document)
+      # Check if response is Nokogiri::Document document (indicates problem!)
+      if response.is_a?(Nokogiri::XML::Document)
         # Find an error?
-        if error_xml = response.find_first('error')
+        if error_xml = response.xpath('//error').first
           # Error message
           err_message = error_xml.child.name
 
@@ -200,7 +200,9 @@ module Xmpp2s
       fail ConnectionFailed, 'Empty response' if response.length == 0
 
       # Parse response
-      response = XML::Parser.string(response).parse
+      response =  Nokogiri::XML(response) do |config|
+        config.options = Nokogiri::XML::ParseOptions::STRICT
+      end
 
       # Look for stream:error!
       if response.root.name == 'stream' && (child = response.root.child) && child.name == 'error'
@@ -209,7 +211,7 @@ module Xmpp2s
 
       # Parse response
       response
-    rescue LibXML::XML::Error => e
+    rescue Nokogiri::XML::SyntaxError => e
       # close socket
       close
 
@@ -241,7 +243,7 @@ module Xmpp2s
       response = read_data(append: '</stream:stream>')
 
       # Check features
-      unless (@features = response.find_first('.//stream:features'))
+      unless (@features = response.xpath('//stream:features').first)
         # Close connection
         close
 

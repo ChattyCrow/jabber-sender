@@ -1,5 +1,3 @@
-require 'xml'
-
 module Xmpp2s
   module Protocol
     # Class represents authenticate XML
@@ -16,26 +14,19 @@ module Xmpp2s
       end
 
       def to_xml
-        @xml ||= xml_node.to_s
+        @xml ||= xml_node.doc.root.to_xml
       end
 
       private
 
       def xml_node
-        # Create message node
-        node = XML::Node.new('message')
-        node.attributes['to']   = @jid
-        node.attributes['type'] = 'chat'
-
-        # Create body node
-        body = XML::Node.new('body')
-        body.content = @message
-
-        # Set body to parent
-        node << body
-
-        # Return node
-        node
+        Nokogiri::XML::Builder.new do |xml|
+          xml.message(to: @jid, type: 'chat') {
+            xml.body {
+              xml << message
+            }
+          }
+        end
       end
     end
   end

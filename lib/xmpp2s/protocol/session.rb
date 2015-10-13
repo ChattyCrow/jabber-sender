@@ -1,5 +1,4 @@
 require 'base64'
-require 'xml'
 
 module Xmpp2s
   module Protocol
@@ -13,24 +12,17 @@ module Xmpp2s
       end
 
       def to_xml
-        @xml ||= xml_node.to_s
+        @xml ||= xml_node.doc.root.to_xml
       end
 
       private
 
       def xml_node
-        node = XML::Node.new('iq')
-        node.attributes['to'] = @host
-        node.attributes['type'] = 'set'
-        node.attributes['id'] = '1'
-
-        # Session node
-        session = XML::Node.new('session')
-        session.attributes['xmlns'] = 'urn:ietf:params:xml:ns:xmpp-session'
-        node << session
-
-        # Return node
-        node
+        Nokogiri::XML::Builder.new do |xml|
+          xml.iq(to: @host, type: 'set', id: '1') {
+            xml.session(xmlns: 'urn:ietf:params:xml:ns:xmpp-session')
+          }
+        end
       end
     end
   end

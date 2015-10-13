@@ -10,30 +10,21 @@ module Xmpp2s
       end
 
       def to_xml
-        @xml ||= xml_node.to_s
+        @xml ||= xml_node.doc.root.to_xml
       end
 
       private
 
       def xml_node
-        node = XML::Node.new('iq')
-        node.attributes['type'] = 'set'
-        node.attributes['id']   = '0'
-
-        # Add bind node
-        bind_node = XML::Node.new('bind')
-        bind_node.attributes['xmlns'] = 'urn:ietf:params:xml:ns:xmpp-bind'
-
-        # Add resource node
-        resource_node = XML::Node.new('resource')
-        resource_node.content = @resource || ''
-
-        # Add child
-        bind_node << resource_node
-        node << bind_node
-
-        # Return node
-        node
+        Nokogiri::XML::Builder.new do |xml|
+          xml.iq(type: 'set', id: '0') {
+            xml.bind(xmlns: 'urn:ietf:params:xml:ns:xmpp-bind') {
+              xml.resource {
+                xml << @resource || ''
+              }
+            }
+          }
+        end
       end
     end
   end

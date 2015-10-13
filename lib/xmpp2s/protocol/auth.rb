@@ -1,5 +1,4 @@
 require 'base64'
-require 'xml'
 
 module Xmpp2s
   module Protocol
@@ -21,7 +20,7 @@ module Xmpp2s
       end
 
       def to_xml
-        @xml ||= xml_node.to_s
+        @xml ||= xml_node.doc.root.to_xml
       end
 
       private
@@ -35,15 +34,12 @@ module Xmpp2s
           auth_text = ''
         end
 
-        node = XML::Node.new('auth')
-
-        # TODO: Change
-        node.attributes['xmlns'] = 'urn:ietf:params:xml:ns:xmpp-sasl'
-        node.attributes['mechanism'] = auth
-        node << auth_text
-
-        # Return node
-        node
+        # Return nokogiri builder
+        Nokogiri::XML::Builder.new do |xml|
+          xml.auth(xmlns: 'urn:ietf:params:xml:ns:xmpp-sasl', mechanism: auth) {
+            xml << auth_text
+          }
+        end
       end
     end
   end
