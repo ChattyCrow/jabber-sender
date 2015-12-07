@@ -39,6 +39,7 @@ module Xmpp2s
       "#{@username}@#{@domain}"
     end
 
+    # Return full jid with resource
     def full_jid
       if @resource
         "#{jid}/#{@resource}"
